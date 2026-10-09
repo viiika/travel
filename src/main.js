@@ -1466,7 +1466,7 @@ function renderPlaceResults() {
         "div",
         { class: "empty" },
         h("strong", {}, "Where have you been?"),
-        "Click a country or city on the map, or search above. Your travels stay with you: they are saved to a file of your own, and nothing is uploaded.",
+        "Click a country or city on the map, or search above.",
         h("div", { class: "btn-row" }, h("button", { class: "btn primary", onclick: doOpen }, "Open travel file"), h("button", { class: "btn", onclick: loadSample }, "Try an example"))
       )
     );
@@ -2829,6 +2829,11 @@ $("#panel-toggle").onclick = $("#sheet-handle").onclick = () => {
 };
 window.addEventListener("resize", updateInset);
 updateInset();
+// The phone sheet is short, so there the footer scrolls in at the end of the panel body.
+const phoneLayout = window.matchMedia("(max-width: 760px)");
+const placeFooter = () => (phoneLayout.matches ? $(".panel-body").append($(".panel-foot")) : $(".panel-body").after($(".panel-foot")));
+phoneLayout.addEventListener("change", placeFooter);
+placeFooter();
 map.view.ox = map.targetOx;
 map.view.oy = map.targetOy;
 $("#zoom-in").onclick = () => map.zoomBy(1.5);

@@ -506,7 +506,21 @@ body.dropping .drop-hint {
   padding: 9px 16px 11px;
   border-top: 1px solid var(--line);
   font-size: 11px;
+  line-height: 1.45;
   color: var(--text-3);
+}
+
+.panel-foot p {
+  margin: 0;
+}
+
+.panel-foot p + p {
+  margin-top: 4px;
+}
+
+/* On phones the footer ends the scrolling panel body instead of taking room from the short sheet. */
+.panel-body .panel-foot {
+  margin: 22px -16px -18px;
 }
 
 .panel-foot a {
