@@ -1,0 +1,30 @@
+{
+  "name": "travel",
+  "version": "1.0.0",
+  "description": "Mark the countries and cities you have been to, keep your trips, and replay your flights on a globe",
+  "homepage": "https://viiika.github.io/travel/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viiika/travel.git"
+  },
+  "author": "Jinbin Bai",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "fetch-data": "bash tools/fetch-data.sh",
+    "data": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tools/build-data.mjs"
+  },
+  "devDependencies": {
+    "all-the-cities": "^3.1.0",
+    "country-flag-icons": "^1.6.20",
+    "d3": "^7.9.0",
+    "esbuild": "^0.28.2",
+    "fflate": "^0.8.3",
+    "mapshaper": "^0.7.80",
+    "mp4-muxer": "^5.2.2",
+    "topojson-client": "^3.1.0",
+    "topojson-server": "^3.0.1",
+    "webm-muxer": "^5.1.4"
+  }
+}

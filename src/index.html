@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Travel Atlas</title>
+    <meta name="description" content="Mark the countries and cities you have been to, keep your trips, and replay your flights on a globe. Free and open source; your travels stay in your browser." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Travel Atlas" />
+    <meta property="og:description" content="Mark the countries and cities you have been to, keep your trips, and replay your flights on a globe. Free and open source; your travels stay in your browser." />
+    <meta property="og:url" content="https://viiika.github.io/travel/" />
+    <meta property="og:image" content="https://viiika.github.io/travel/preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23e4572e'/%3E%3Cpath d='M2 16h28M16 2c5 4 5 24 0 28M16 2c-5 4-5 24 0 28' stroke='white' stroke-width='1.6' fill='none'/%3E%3C/svg%3E" />
+    <style>
+      /*__CSS__*/
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="map" aria-label="World map"></canvas>
+
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Travel Atlas</span>
+        </div>
+        <dl class="stats" id="stats"></dl>
+        <div class="file-bar" id="file-bar">
+          <span class="file-dot" aria-hidden="true"></span>
+          <span class="file-text"><span id="file-name">No file open</span><small id="file-state"></small></span>
+          <button class="btn" id="file-open" title="Open a travel data file (Ctrl+O)">Open</button>
+          <button class="btn primary" id="file-save" title="Save your travels to a file (Ctrl+S)">Save</button>
+        </div>
+      </header>
+
+      <aside class="panel" id="panel">
+        <button class="sheet-handle" id="sheet-handle" aria-label="Show or hide the panel"><span></span></button>
+        <nav class="tabs" role="tablist">
+          <button role="tab" data-tab="places" class="active">Places</button>
+          <button role="tab" data-tab="trips">Trips</button>
+          <button role="tab" data-tab="style">Style</button>
+          <button role="tab" data-tab="export">Export</button>
+        </nav>
+        <div class="panel-body">
+          <section data-pane="places" class="active"></section>
+          <section data-pane="trips"></section>
+          <section data-pane="style"></section>
+          <section data-pane="export"></section>
+        </div>
+        <footer class="panel-foot">Made by <a href="https://github.com/viiika" target="_blank" rel="noopener">Jinbin Bai</a><span aria-hidden="true">·</span><a href="https://github.com/viiika/travel" target="_blank" rel="noopener">Source</a></footer>
+        <button class="panel-toggle" id="panel-toggle" aria-label="Collapse panel" title="Collapse panel">
+          <svg viewBox="0 0 16 16" width="14" height="14"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+      </aside>
+
+      <div class="controls">
+        <button class="tl-toggle" id="timeline-toggle" aria-pressed="false">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="3" width="12" height="11" rx="2" /><path d="M2 6.5h12M5.5 1.8v2.4m5-2.4v2.4" /><path d="M5 9.5h1.5m2 0H10M5 11.8h1.5" /></svg>
+          <span>Years</span>
+        </button>
+        <div class="segmented" id="view-toggle">
+          <button data-view="globe">Globe</button>
+          <button data-view="flat">Flat</button>
+        </div>
+        <div class="zoom">
+          <button id="zoom-in" aria-label="Zoom in">+</button>
+          <button id="zoom-out" aria-label="Zoom out">&minus;</button>
+          <button id="zoom-reset" aria-label="Reset view" title="Reset view">
+            <svg viewBox="0 0 16 16" width="14" height="14"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.4" /><circle cx="8" cy="8" r="1.4" fill="currentColor" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="legend" id="legend" hidden></div>
+      <div class="tooltip" id="tooltip" hidden></div>
+      <div class="place-card" id="place-card" role="dialog" hidden></div>
+      <div class="hint" id="hint" hidden></div>
+      <div class="pick-bar" id="pick-bar" role="status" hidden></div>
+      <div class="pick-mark" id="pick-mark" aria-hidden="true" hidden></div>
+      <div class="timeline" id="timeline" role="group" aria-label="Timeline" hidden></div>
+      <div class="restore" id="restore" hidden></div>
+      <div class="drop-hint" aria-hidden="true">Drop your travel file to open it</div>
+
+      <div class="player" id="player" hidden>
+        <button id="player-toggle" aria-label="Pause">
+          <svg viewBox="0 0 16 16" width="14" height="14" class="i-pause"><rect x="3.5" y="3" width="3" height="10" rx="1" fill="currentColor" /><rect x="9.5" y="3" width="3" height="10" rx="1" fill="currentColor" /></svg>
+          <svg viewBox="0 0 16 16" width="14" height="14" class="i-play"><path d="M4.5 3v10l8.5-5z" fill="currentColor" /></svg>
+        </button>
+        <input type="range" id="player-scrub" min="0" max="1000" value="0" aria-label="Playback position" />
+        <span class="player-time" id="player-time">0:00</span>
+        <button id="player-close" aria-label="Close playback">Close</button>
+      </div>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+    <script>
+      /*__JS__*/
+    </script>
+  </body>
+</html>
