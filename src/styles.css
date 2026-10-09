@@ -519,10 +519,6 @@ body.dropping .drop-hint {
   text-decoration: underline;
 }
 
-.panel-foot span {
-  margin: 0 6px;
-}
-
 .panel-body section.active {
   display: block;
 }
